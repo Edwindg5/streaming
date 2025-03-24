@@ -1,0 +1,296 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoFlix - Iniciar Sesión</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-red-hover: #F40612;
+            --netflix-black: #141414;
+            --netflix-dark: #181818;
+            --netflix-gray: #333333;
+            --netflix-light-gray: #8c8c8c;
+            --netflix-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+                        url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23141414"/><path d="M0 20 L100 20" stroke="%23222" stroke-width="0.5"/><path d="M0 40 L100 40" stroke="%23222" stroke-width="0.5"/><path d="M0 60 L100 60" stroke="%23222" stroke-width="0.5"/><path d="M0 80 L100 80" stroke="%23222" stroke-width="0.5"/><path d="M20 0 L20 100" stroke="%23222" stroke-width="0.5"/><path d="M40 0 L40 100" stroke="%23222" stroke-width="0.5"/><path d="M60 0 L60 100" stroke="%23222" stroke-width="0.5"/><path d="M80 0 L80 100" stroke="%23222" stroke-width="0.5"/></svg>');
+            color: var(--netflix-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header {
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--netflix-red);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            margin: auto;
+            padding: 60px 68px;
+            background-color: rgba(0, 0, 0, 0.75);
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-title {
+            color: var(--netflix-white);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+        
+        .message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .message i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .success {
+            background-color: rgba(39, 174, 96, 0.2);
+            border-left: 4px solid #27AE60;
+        }
+        
+        .error {
+            background-color: rgba(229, 9, 20, 0.2);
+            border-left: 4px solid var(--netflix-red);
+        }
+        
+        .info {
+            background-color: rgba(41, 128, 185, 0.2);
+            border-left: 4px solid #2980B9;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        
+        .form-control {
+            width: 100%;
+            height: 50px;
+            background-color: var(--netflix-gray);
+            border: none;
+            border-radius: 4px;
+            color: var(--netflix-white);
+            padding: 16px 20px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .form-control:focus {
+            background-color: #454545;
+            box-shadow: 0 0 0 2px var(--netflix-red);
+        }
+        
+        .form-label {
+            position: absolute;
+            left: 20px;
+            top: 16px;
+            color: var(--netflix-light-gray);
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus ~ .form-label,
+        .form-control:not(:placeholder-shown) ~ .form-label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            padding: 0 5px;
+            background-color: var(--netflix-gray);
+            border-radius: 2px;
+            color: var(--netflix-white);
+        }
+        
+        .form-control:focus ~ .form-label {
+            color: var(--netflix-red);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            height: 50px;
+            background-color: var(--netflix-red);
+            border: none;
+            border-radius: 4px;
+            color: var(--netflix-white);
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--netflix-red-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .form-footer {
+            margin-top: 16px;
+            color: var(--netflix-light-gray);
+            display: flex;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .form-footer a {
+            color: var(--netflix-white);
+            text-decoration: none;
+            margin-left: 5px;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+            color: var(--netflix-red);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+            
+            .form-title {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .form-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('login') }}" class="logo">
+            <i class="fas fa-play-circle"></i>
+            <span>VideoFlix</span>
+        </a>
+    </div>
+    
+    <div class="login-container">
+        <h1 class="form-title">Iniciar sesión</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle"></i>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="post" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <input type="text" id="username" name="username" class="form-control" required placeholder=" ">
+                <label for="username" class="form-label">Nombre de usuario</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" id="password" name="password" class="form-control" required placeholder=" ">
+                <label for="password" class="form-label">Contraseña</label>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </button>
+        </form>
+        
+        <div class="form-footer">
+            ¿Primera vez en VideoFlix?
+            <a href="{{ url_for('register') }}">Regístrate ahora</a>
+        </div>
+    </div>
+    
+    <script>
+        // Animación para los mensajes de alerta
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.message');
+            
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

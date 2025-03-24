@@ -1,0 +1,804 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoFlix - Tu App de Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-red-hover: #F40612;
+            --netflix-black: #141414;
+            --netflix-dark: #181818;
+            --netflix-gray: #222222;
+            --netflix-light-gray: #8c8c8c;
+            --netflix-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--netflix-black);
+            color: var(--netflix-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--netflix-red);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            background-color: var(--netflix-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .user-name {
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background-color: transparent;
+            color: var(--netflix-white);
+            border: none;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(229, 9, 20, 0.1);
+            color: var(--netflix-red);
+        }
+        
+        /* CONNECTION STATUS */
+        .connection-status {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 14px;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .online .status-indicator {
+            background-color: #4CAF50;
+            box-shadow: 0 0 10px #4CAF50;
+            animation: pulse 2s infinite;
+        }
+        
+        .offline .status-indicator {
+            background-color: var(--netflix-red);
+            box-shadow: 0 0 10px var(--netflix-red);
+            animation: pulse 2s infinite;
+        }
+        
+        /* VIDEO PLAYER */
+        .player-section {
+            margin: 30px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            background-color: var(--netflix-dark);
+            transition: transform 0.3s ease;
+            position: relative;
+            animation: scaleIn 0.5s ease;
+        }
+        
+        .video-title {
+            padding: 15px 20px;
+            font-size: 20px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-player-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+        }
+        
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--netflix-red);
+            animation: spin 1s linear infinite;
+        }
+        
+        /* VIDEO LIST */
+        .video-section {
+            margin-top: 50px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .video-card {
+            background-color: var(--netflix-dark);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: scale(1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        .video-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            height: 160px;
+            background-color: var(--netflix-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-thumbnail i {
+            font-size: 50px;
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .video-card:hover .video-thumbnail i {
+            color: var(--netflix-red);
+            transform: scale(1.2);
+        }
+        
+        .play-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(229, 9, 20, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(229, 9, 20, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .video-card:hover .play-icon {
+            transform: scale(1);
+        }
+        
+        .play-icon i {
+            color: white;
+            font-size: 24px !important;
+        }
+        
+        .video-info {
+            padding: 15px;
+        }
+        
+        .video-name {
+            font-weight: 500;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .progress-container {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--netflix-red);
+            width: 0%;
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--netflix-red);
+            transition: width 0.5s ease;
+        }
+        
+        /* MESSAGES */
+        .message-container {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideInRight 0.3s forwards;
+        }
+        
+        .message i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .success {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+        
+        .error {
+            background-color: rgba(229, 9, 20, 0.9);
+            color: white;
+        }
+        
+        .info {
+            background-color: rgba(33, 150, 243, 0.9);
+            color: white;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .user-name {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-play-circle"></i>
+                <span>VideoFlix</span>
+            </div>
+            <div class="user-info">
+                <div class="user-profile">
+                    <div class="user-avatar">{{ username[0].upper() }}</div>
+                    <span class="user-name">{{ username }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Salir</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Flash Messages Container -->
+        <div class="message-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">
+                            {% if category == 'success' %}
+                                <i class="fas fa-check-circle"></i>
+                            {% elif category == 'error' %}
+                                <i class="fas fa-exclamation-circle"></i>
+                            {% else %}
+                                <i class="fas fa-info-circle"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <!-- Connection Status -->
+        <div class="connection-status online" id="connection-status">
+            <span class="status-indicator"></span>
+            <span class="status-text">En línea</span>
+        </div>
+        
+        <!-- Video Player Section -->
+        <div class="player-section" id="player-section">
+            <div class="video-title" id="current-video-title">Selecciona un video para reproducir</div>
+            <div class="video-player-container">
+                <video id="video-player" class="video-player" controls></video>
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Video List Section -->
+        <div class="video-section">
+            <h2 class="section-title">
+                <i class="fas fa-film"></i>
+                Videos Disponibles
+            </h2>
+            <div class="video-grid" id="video-grid">
+                {% for video in videos %}
+                <div class="video-card" data-src="/videos/{{ video }}" data-name="{{ video }}">
+                    <div class="video-thumbnail">
+                        <i class="fas fa-film"></i>
+                        <div class="play-overlay">
+                            <div class="play-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-name">{{ video }}</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress" style="width: {{ history.get(video, 0) * 100 }}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoPlayer = document.getElementById('video-player');
+            const videoCards = document.querySelectorAll('.video-card');
+            const connectionStatus = document.getElementById('connection-status');
+            const statusText = connectionStatus.querySelector('.status-text');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const currentVideoTitle = document.getElementById('current-video-title');
+            
+            // Cache para videos precargados
+            const videoCache = new Map();
+            
+            // Variables para el seguimiento de progreso
+            let currentVideoUrl = '';
+            let currentVideoName = '';
+            let isUpdatingProgress = false;
+            
+            // Ocultar mensajes flash después de 5 segundos
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+            
+            // Verificar conexión a internet
+            function updateOnlineStatus() {
+                if (navigator.onLine) {
+                    connectionStatus.className = 'connection-status online';
+                    statusText.textContent = 'En línea';
+                } else {
+                    connectionStatus.className = 'connection-status offline';
+                    statusText.textContent = 'Fuera de línea (reproduciendo desde caché)';
+                }
+            }
+            
+            // Eventos para detectar cambios en la conexión
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            // Inicializar estado
+            updateOnlineStatus();
+            
+            // Mostrar loading
+            function showLoading() {
+                loadingOverlay.classList.add('active');
+            }
+            
+            // Ocultar loading
+            function hideLoading() {
+                loadingOverlay.classList.remove('active');
+            }
+            
+            // Función para precargar un video
+            async function preloadVideo(url) {
+                if (videoCache.has(url)) {
+                    console.log('Video ya en caché:', url);
+                    return videoCache.get(url);
+                }
+                
+                try {
+                    console.log('Precargando video:', url);
+                    showLoading();
+                    
+                    const response = await fetch(url);
+                    
+                    // Verificar si la respuesta fue exitosa
+                    if (!response.ok) {
+                        throw new Error(`Error al cargar el video: ${response.status}`);
+                    }
+                    
+                    // Obtener el blob del video
+                    const blob = await response.blob();
+                    
+                    // Crear URL para el blob
+                    const videoObjectUrl = URL.createObjectURL(blob);
+                    
+                    // Guardar en caché
+                    videoCache.set(url, {
+                        objectUrl: videoObjectUrl,
+                        blob: blob
+                    });
+                    
+                    console.log('Video precargado y en caché:', url);
+                    hideLoading();
+                    return videoCache.get(url);
+                } catch (error) {
+                    console.error('Error precargando video:', error);
+                    hideLoading();
+                    showNotification('Error al cargar el video', 'error');
+                    return null;
+                }
+            }
+            
+            // Función para mostrar notificaciones
+            function showNotification(message, type = 'info') {
+                const messageContainer = document.querySelector('.message-container');
+                
+                const notification = document.createElement('div');
+                notification.className = `message ${type}`;
+                
+                let icon = 'info-circle';
+                if (type === 'success') icon = 'check-circle';
+                if (type === 'error') icon = 'exclamation-circle';
+                
+                notification.innerHTML = `<i class="fas fa-${icon}"></i>${message}`;
+                
+                messageContainer.appendChild(notification);
+                
+                // Eliminar después de 5 segundos
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+            }
+            
+            // Función para reproducir un video desde la URL o la caché
+            async function playVideo(url, videoName) {
+                currentVideoUrl = url;
+                currentVideoName = videoName;
+                currentVideoTitle.textContent = videoName;
+                
+                // Scroll hasta el reproductor
+                document.getElementById('player-section').scrollIntoView({ behavior: 'smooth' });
+                
+                showLoading();
+                
+                if (navigator.onLine) {
+                    // Si estamos en línea, precargar el video
+                    const cachedVideo = await preloadVideo(url);
+                    
+                    if (cachedVideo) {
+                        // Usar la versión en caché
+                        videoPlayer.src = cachedVideo.objectUrl;
+                    } else {
+                        // Usar la URL directamente
+                        videoPlayer.src = url;
+                    }
+                } else {
+                    // Si estamos fuera de línea, intentar reproducir desde caché
+                    if (videoCache.has(url)) {
+                        videoPlayer.src = videoCache.get(url).objectUrl;
+                    } else {
+                        hideLoading();
+                        showNotification('Video no disponible sin conexión', 'error');
+                        return;
+                    }
+                }
+                
+                // Buscar el progreso guardado para este video
+                const progressElement = document.querySelector(`.video-card[data-name="${videoName}"] .progress`);
+                if (progressElement) {
+                    const progressWidth = progressElement.style.width;
+                    if (progressWidth) {
+                        const progress = parseFloat(progressWidth) / 100;
+                        if (progress > 0 && progress < 0.95) {  // No saltamos si está casi al final
+                            videoPlayer.addEventListener('loadedmetadata', function onLoaded() {
+                                const seekTime = progress * videoPlayer.duration;
+                                videoPlayer.currentTime = seekTime;
+                                videoPlayer.removeEventListener('loadedmetadata', onLoaded);
+                                hideLoading();
+                            });
+                        } else {
+                            hideLoading();
+                        }
+                    } else {
+                        hideLoading();
+                    }
+                } else {
+                    hideLoading();
+                }
+                
+                // Iniciar reproducción
+                videoPlayer.play().catch(e => {
+                    console.error('Error reproduciendo video:', e);
+                    hideLoading();
+                });
+            }
+            
+            // Actualizar progreso de visualización
+            async function updateProgress() {
+                if (!currentVideoName || !videoPlayer.duration || isUpdatingProgress) return;
+                
+                const progress = videoPlayer.currentTime / videoPlayer.duration;
+                if (isNaN(progress)) return;
+                
+                // Actualizar barra de progreso en la UI
+                const progressElement = document.querySelector(`.video-card[data-name="${currentVideoName}"] .progress`);
+                if (progressElement) {
+                    progressElement.style.width = `${progress * 100}%`;
+                }
+                
+                // Si estamos en línea, enviar progreso al servidor
+                if (navigator.onLine && progress > 0) {
+                    try {
+                        isUpdatingProgress = true;
+                        const response = await fetch('/api/update_progress', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                video_name: currentVideoName,
+                                progress: progress
+                            })
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Error al actualizar progreso: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.error('Error guardando progreso:', error);
+                    } finally {
+                        isUpdatingProgress = false;
+                    }
+                }
+            }
+            
+            // Actualizar progreso periódicamente
+            setInterval(updateProgress, 5000);  // Cada 5 segundos
+            
+            // También actualizar al pausar el video
+            videoPlayer.addEventListener('pause', updateProgress);
+            
+            // Y al terminar el video
+            videoPlayer.addEventListener('ended', function() {
+                // Marcar como 100% completado
+                const progressElement = document.querySelector(`.video-card[data-name="${currentVideoName}"] .progress`);
+                if (progressElement) {
+                    progressElement.style.width = '100%';
+                }
+                updateProgress();
+                showNotification('Reproducción completada', 'success');
+            });
+            
+            // Eventos de carga del video
+            videoPlayer.addEventListener('waiting', showLoading);
+            videoPlayer.addEventListener('playing', hideLoading);
+            
+            // Agregar eventos de clic a cada tarjeta de video
+            videoCards.forEach(card => {
+                const videoUrl = card.getAttribute('data-src');
+                const videoName = card.getAttribute('data-name');
+                
+                card.addEventListener('click', function() {
+                    playVideo(videoUrl, videoName);
+                });
+            });
+            
+            // Precargar los videos solo cuando se necesiten
+            // No precargamos todos al inicio para ahorrar ancho de banda
+            
+            // Si el video actual se detiene porque se terminó el buffer pero estamos fuera de línea,
+            // intentar reanudar desde donde quedó usando la caché
+            videoPlayer.addEventListener('stalled', function() {
+                if (!navigator.onLine && currentVideoUrl && videoCache.has(currentVideoUrl)) {
+                    console.log('Video detenido, intentando reanudar desde caché');
+                    showLoading();
+                    const currentTime = videoPlayer.currentTime;
+                    videoPlayer.src = videoCache.get(currentVideoUrl).objectUrl;
+                    videoPlayer.currentTime = currentTime;
+                    videoPlayer.play().catch(e => {
+                        console.error('Error reanudando video:', e);
+                        hideLoading();
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
