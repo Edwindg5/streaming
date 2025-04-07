@@ -1,4 +1,3 @@
-# app.py - Servidor Flask con SQLite y login
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for, session, flash
 import os
 import sqlite3

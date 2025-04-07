@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,123 +5,470 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NetoFlix</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='components/styles.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3a86ff',
+                        'primary-dark': '#2667cc',
+                        secondary: '#8338ec',
+                        accent: '#ff006e',
+                        dark: '#0d1b2a',
+                        darker: '#070f1a',
+                        light: '#e2eafc',
+                        gray: '#415a77',
+                        'light-gray': '#e0e1dd',
+                        success: '#4cc9f0',
+                        error: '#f72585',
+                        info: '#4895ef',
+                        warning: '#f8961e',
+                    },
+                    fontFamily: {
+                        'sans': ['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/css">
+        /* Animaciones simples con CSS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes slideRight {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+        
+        /* Clases para animaciones */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 2s infinite;
+        }
+        
+        .animate-spin-slow {
+            animation: spin 2s linear infinite;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        .animate-delay-500 {
+            animation-delay: 0.5s;
+        }
+        
+        /* Efecto de brillo */
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .shine-effect:hover::after {
+            left: 100%;
+        }
+        
+        /* Modal */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        /* Gradientes */
+        .text-gradient {
+            background: linear-gradient(135deg, #e2eafc, #3a86ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .bg-gradient-hero {
+            background: radial-gradient(circle at 30% 30%, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1), transparent 60%), 
+                         radial-gradient(circle at 70% 60%, rgba(131, 56, 236, 0.1), rgba(58, 134, 255, 0.1), transparent 60%);
+        }
+        
+        /* Progress shine effect */
+        .progress-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+        
+        .progress-container:hover .progress-shine::after {
+            animation: slideRight 1.5s infinite;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-darker to-dark text-light min-h-screen overflow-x-hidden font-sans">
 
-<header id="main-header">
-    <div class="container header-content">
-        <div class="logo-container">
-            <div class="logo">
-                <i class="fas fa-play"></i>
-                <span>Neto Flix</span>
+<!-- Cabecera principal -->
+<header id="main-header" class="fixed top-0 w-full z-50 bg-darker/95 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+    <div class="container mx-auto px-4 md:px-10 h-20 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <div class="relative flex items-center font-extrabold text-2xl md:text-3xl mr-2 pr-4">
+                <i class="fas fa-play text-gradient mr-3 text-2xl md:text-3xl"></i>
+                <span class="text-gradient">Neto Flix</span>
+                <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-3/5 w-0.5 bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
             </div>
             
-            <nav class="nav-links">
-                <a href="#" class="nav-link">Inicio</a>
-              
+            <nav class="hidden md:flex gap-6 ml-8">
+                <a href="#" class="text-white/80 hover:text-white font-medium text-base relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-secondary after:transition-all after:duration-300">Inicio</a>
+                <a href="#player-section" class="text-white/80 hover:text-white font-medium text-base relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-secondary after:transition-all after:duration-300">Reproductor</a>
+                <a href="#video-section" class="text-white/80 hover:text-white font-medium text-base relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 hover:after:w-full after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-secondary after:transition-all after:duration-300">Contenido</a>
             </nav>
         </div>
         
-        <div class="user-actions">
-            <div class="user-profile">
-                <div class="user-avatar">{{ username[0].upper() }}</div>
-                <span class="user-name">{{ username }}</span>
-                <i class="fas fa-chevron-down dropdown-arrow"></i>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-4 cursor-pointer group">
+                <div class="relative w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-primary to-accent text-white font-bold text-lg shadow-md shadow-primary/30 transition-all duration-300 transform hover:-translate-y-1 hover:rotate-3" aria-label="Avatar de usuario">
+                    {{ username[0].upper() }}
+                </div>
+                <span class="font-semibold text-light hidden sm:block group-hover:text-primary transition-colors">{{ username }}</span>
+                <i class="fas fa-chevron-down transition-transform duration-300 group-hover:rotate-180"></i>
             </div>
             
-            <a href="{{ url_for('logout') }}" class="logout-btn">
+            <a href="{{ url_for('logout') }}" class="flex items-center gap-2 px-6 py-2.5 sm:px-6 sm:py-2.5 rounded-lg font-semibold text-light border border-white/10 hover:bg-white/5 hover:shadow-lg hover:shadow-black/30 hover:-translate-y-0.5 transition-all duration-300" aria-label="Cerrar sesión">
                 <i class="fas fa-sign-out-alt"></i>
-                <span>Salir</span>
+                <span class="hidden sm:inline">Salir</span>
             </a>
         </div>
     </div>
 </header>
+
+<!-- Fondo con burbujas -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="absolute rounded-full bg-primary/10 blur-2xl w-72 h-72 top-1/10 left-1/10 animate-float"></div>
+    <div class="absolute rounded-full bg-secondary/10 blur-2xl w-48 h-48 top-3/4 left-4/5 animate-float animate-delay-300"></div>
+    <div class="absolute rounded-full bg-accent/10 blur-2xl w-36 h-36 top-2/5 left-2/5 animate-float animate-delay-100"></div>
+    <div class="absolute rounded-full bg-primary/10 blur-2xl w-44 h-44 top-4/5 left-1/6 animate-float animate-delay-200"></div>
+    <div class="absolute rounded-full bg-secondary/10 blur-2xl w-60 h-60 top-1/5 left-3/4 animate-float animate-delay-500"></div>
+</div>
     
- 
-    <section class="hero-section">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <h1 class="hero-title">Experiencia de Streaming Premium</h1>
-            <p class="hero-description">Disfruta de contenido exclusivo en la mejor calidad disponible, accesible desde cualquier dispositivo.</p>
-           
+<!-- Sección de héroe -->
+<section class="relative pt-48 pb-32 min-h-[70vh] flex items-center mb-16 overflow-hidden animate-fade-in">
+    <div class="absolute inset-0 bg-gradient-hero z-[-1]"></div>
+    <div class="container mx-auto px-6 z-10">
+        <div class="max-w-3xl">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-8 text-gradient">Experiencia de Streaming Premium</h1>
+            <p class="text-lg md:text-xl text-light/80 max-w-2xl mb-10 leading-relaxed">Disfruta de contenido exclusivo en la mejor calidad disponible, accesible desde cualquier dispositivo.</p>
         </div>
-        
-        <!-- Connection Status -->
-        <div class="connection-status online" id="connection-status">
-            <span class="status-indicator"></span>
-            <span class="status-text">Conectado - Ultra HD</span>
-        </div>
-    </section>
+    </div>
     
-    <div class="main-content">
-        <!-- Flash Messages Container -->
-        <div class="message-container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="message {{ category }}">
-                            {% if category == 'success' %}
-                                <i class="fas fa-check-circle"></i>
-                            {% elif category == 'error' %}
-                                <i class="fas fa-exclamation-circle"></i>
-                            {% else %}
-                                <i class="fas fa-info-circle"></i>
-                            {% endif %}
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
-        
-        <!-- Video Player Section -->
-        <div class="player-section" id="player-section">
-            <div class="video-title" id="current-video-title">
-                <i class="fas fa-film"></i>
-                <span>Selecciona un video para reproducir</span>
-            </div>
-            <div class="video-player-container">
-                <video id="video-player" class="video-player" controls></video>
-                <div class="loading-overlay" id="loading-overlay">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Video List Section -->
-        <div class="video-section">
-            <h2 class="section-title">
-                <i class="fas fa-star"></i>
-                Contenido Exclusivo
-            </h2>
-            <div class="video-grid" id="video-grid">
-                {% for video in videos %}
-                <div class="video-card" data-src="/videos/{{ video }}" data-name="{{ video }}">
-                    <div class="video-thumbnail">
-                        <i class="fas fa-play"></i>
-                        <div class="play-overlay">
-                            <div class="play-icon">
-                                <i class="fas fa-play"></i>
-                            </div>
-                        </div>
+    <!-- Connection Status -->
+    <div id="connection-status" class="absolute top-8 right-8 bg-dark/70 px-5 py-2.5 rounded-full flex items-center text-sm font-medium backdrop-blur-md border border-white/10 shadow-md cursor-help hover:-translate-y-1 transition-all duration-300">
+        <span class="inline-block w-3 h-3 bg-success rounded-full mr-3 relative before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-success before:animate-pulse-slow"></span>
+        <span class="text-light">Conectado - Ultra HD</span>
+    </div>
+</section>
+    
+<!-- Contenido principal -->
+<div class="container mx-auto px-6 pb-20">
+    <!-- Flash Messages Container -->
+    <div class="fixed top-32 right-8 z-50" aria-live="polite">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message mb-5 px-6 py-4 rounded-xl shadow-xl backdrop-blur-md bg-dark/90 border-l-4 flex items-center min-w-[320px] max-w-md animate-fade-in {{ 'border-success' if category == 'success' else 'border-error' if category == 'error' else 'border-info' }}" role="alert">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle text-success text-xl mr-4"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-circle text-error text-xl mr-4"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle text-info text-xl mr-4"></i>
+                        {% endif %}
+                        {{ message }}
                     </div>
-                    <div class="video-info">
-                        <div class="video-name">{{ video }}</div>
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress" style="width: {{ history.get(video, 0) * 100 }}%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+    <!-- Video Player Section -->
+    <div id="player-section" class="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 bg-dark/30 backdrop-blur-md border border-white/10 hover:-translate-y-2 transition-all duration-500 mb-20 relative animate-fade-in animate-delay-100">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl opacity-0 hover:opacity-10 transition-opacity duration-500 z-0"></div>
+        <div class="p-6 md:p-8 bg-darker/60 border-b border-white/5 flex items-center gap-4 flex-wrap">
+            <i class="fas fa-film text-primary text-xl"></i>
+            <span id="current-video-title" class="text-xl font-semibold text-light">Selecciona un video para reproducir</span>
+        </div>
+        <div class="relative pt-[56.25%] bg-gradient-to-r from-darker to-dark">
+            <video id="video-player" class="absolute inset-0 w-full h-full outline-none border-none"></video>
+            <div id="loading-overlay" class="absolute inset-0 bg-darker/90 flex items-center justify-center z-10 opacity-0 pointer-events-none transition-opacity duration-400" aria-hidden="true">
+                <div class="w-16 h-16 rounded-full border-4 border-light/10 border-t-primary border-r-secondary animate-spin-slow"></div>
             </div>
         </div>
     </div>
+    
+    <!-- Botón de gestión de caché -->
+    <div class="flex justify-end mb-12">
+        <button id="cached-videos-btn" class="group relative overflow-hidden py-3 px-6 rounded-xl text-light font-medium border border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/20 animate-fade-in animate-delay-200 shine-effect" aria-label="Gestionar videos guardados">
+            <div class="relative z-10 flex items-center gap-3">
+                <i class="fas fa-database"></i>
+                <span>Gestionar videos guardados</span>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+        </button>
+    </div>
+    
+    <!-- Video List Section -->
+    <div id="video-section" class="mb-24 animate-fade-in animate-delay-300">
+        <h2 class="text-3xl font-bold mb-10 flex items-center gap-4 pb-2.5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-20 after:h-1 after:bg-gradient-to-r after:from-primary after:to-secondary after:rounded">
+            <i class="fas fa-star text-primary text-2xl"></i>
+            Contenido Exclusivo
+        </h2>
+        <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            {% for video in videos %}
+            <div class="group relative overflow-hidden bg-dark/30 backdrop-blur-md rounded-xl border border-white/5 cursor-pointer transform transition-all duration-500 hover:-translate-y-3 hover:shadow-xl hover:shadow-primary/20 shine-effect" data-src="/videos/{{ video }}" data-name="{{ video }}" tabindex="0" aria-label="Reproducir {{ video }}">
+                <div class="absolute inset-0 bg-gradient-to-r from-primary/30 to-secondary/30 opacity-0 group-hover:opacity-20 transition-opacity duration-500 z-0"></div>
+                <div class="h-48 bg-gradient-to-r from-dark to-dark/50 flex items-center justify-center relative overflow-hidden">
+                    <i class="fas fa-play text-white/10 text-5xl transition-all duration-300 group-hover:text-primary group-hover:scale-110 z-10"></i>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 shadow-lg">
+                            <i class="fas fa-play text-white text-lg ml-1"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <div class="font-semibold text-lg mb-4 text-light truncate">{{ video }}</div>
+                    <div class="mt-4 progress-container">
+                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-primary to-secondary rounded-full relative progress-shine" style="width: {{ history.get(video, 0) * 100 }}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    
+<!-- Modal para gestión de caché -->
+<div id="cache-modal" class="modal fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-darker/80" aria-hidden="true">
+    <div class="modal-content w-11/12 max-w-3xl max-h-[85vh] overflow-auto bg-gradient-to-br from-dark/90 to-darker/90 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl z-10" role="dialog" aria-labelledby="modal-title">
+        <div class="flex justify-between items-center p-6 border-b border-white/10">
+            <h3 id="modal-title" class="text-2xl font-semibold text-gradient relative inline-block after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:w-10 after:h-0.5 after:bg-gradient-to-r after:from-primary after:to-secondary after:transition-all after:duration-300 hover:after:w-full">Videos Guardados</h3>
+            <button id="close-modal" class="text-white/60 hover:text-white text-2xl transition-all duration-300 hover:rotate-90" aria-label="Cerrar">&times;</button>
+        </div>
+        <div id="cached-videos-list" class="p-6">
+            <!-- La lista de videos en caché se llenará con JavaScript -->
+            <p>Cargando videos guardados...</p>
+        </div>
+        <div id="storage-info" class="p-6 mt-4 bg-darker/50 m-6 rounded-xl border border-white/5">
+            <!-- Información de almacenamiento -->
+        </div>
+    </div>
+</div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- Script para la funcionalidad principal -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<!-- Script adicional para las animaciones con CSS -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Funcionalidad para el modal
+    const modal = document.getElementById('cache-modal');
+    const openModalBtn = document.getElementById('cached-videos-btn');
+    const closeModalBtn = document.getElementById('close-modal');
+    
+    // Función para abrir el modal
+    function openModal() {
+        if (!modal) return;
+        modal.classList.add('active');
+    }
+    
+    // Función para cerrar el modal
+    function closeModal() {
+        if (!modal) return;
+        modal.classList.remove('active');
+    }
+    
+    // Eventos para abrir/cerrar modal
+    if (openModalBtn) openModalBtn.addEventListener('click', openModal);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+    
+    // Cerrar modal al hacer clic fuera del contenido
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+    }
+    
+    // Función para mostrar notificaciones
+    window.showNotification = function(message, type = 'info') {
+        const messageContainer = document.querySelector('.fixed.top-32.right-8');
+        if (!messageContainer) return;
+        
+        const notification = document.createElement('div');
+        notification.className = `message mb-5 px-6 py-4 rounded-xl shadow-xl backdrop-blur-md bg-dark/90 border-l-4 flex items-center min-w-[320px] max-w-md animate-fade-in ${type === 'success' ? 'border-success' : type === 'error' ? 'border-error' : 'border-info'}`;
+        notification.setAttribute('role', 'alert');
+        
+        let icon = 'info-circle';
+        let iconClass = 'text-info';
+        
+        if (type === 'success') {
+            icon = 'check-circle';
+            iconClass = 'text-success';
+        } else if (type === 'error') {
+            icon = 'exclamation-circle';
+            iconClass = 'text-error';
+        }
+        
+        notification.innerHTML = `<i class="fas fa-${icon} ${iconClass} text-xl mr-4"></i>${message}`;
+        
+        messageContainer.appendChild(notification);
+        
+        // Auto-eliminar después de 5 segundos
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(20px)';
+            notification.style.transition = 'opacity 0.3s, transform 0.3s';
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000);
+    };
+    
+    // Funciones para loading overlay
+    window.showLoading = function() {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.opacity = '1';
+            loadingOverlay.style.pointerEvents = 'auto';
+        }
+    };
+    
+    window.hideLoading = function() {
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.opacity = '0';
+            loadingOverlay.style.pointerEvents = 'none';
+        }
+    };
+    
+    // Header scroll efecto
+    const header = document.getElementById('main-header');
+    
+    function handleScroll() {
+        if (header) {
+            if (window.scrollY > 20) {
+                header.classList.add('h-16');
+                header.classList.remove('h-20');
+                header.classList.add('bg-darker/98');
+                header.classList.add('shadow-lg');
+            } else {
+                header.classList.remove('h-16');
+                header.classList.add('h-20');
+                header.classList.remove('bg-darker/98');
+                header.classList.remove('shadow-lg');
+            }
+        }
+    }
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Añadir un botón de descarga cuando se reproduce un video
+    const originalPlayVideo = window.playVideo;
+    
+    if (typeof originalPlayVideo === 'function') {
+        window.playVideo = function(url, videoName) {
+            // Llamar a la función original
+            originalPlayVideo(url, videoName);
+            
+            // Añadir botón de descarga
+            const videoTitle = document.getElementById('current-video-title');
+            if (videoTitle) {
+                // Comprobar si ya existe un botón de descarga
+                const existingBtn = videoTitle.querySelector('.download-btn');
+                if (!existingBtn) {
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.id = 'download-video-btn';
+                    downloadBtn.className = 'ml-4 px-3 py-1.5 bg-gradient-to-r from-success to-info text-white rounded-lg flex items-center gap-2 hover:-translate-y-1 hover:shadow-md transition-all duration-300 text-sm font-medium download-btn';
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Guardar en PC';
+                    downloadBtn.addEventListener('click', function() {
+                        if (typeof window.downloadVideo === 'function') {
+                            window.downloadVideo(url, videoName);
+                        }
+                    });
+                    
+                    videoTitle.appendChild(downloadBtn);
+                }
+            }
+        };
+    }
+});
+</script>
 </body>
 </html>
