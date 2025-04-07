@@ -3,173 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VideoFlix - Crear cuenta</title>
+    <title>Neto Flix - Crear Cuenta</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --netflix-red: #E50914;
-            --netflix-red-hover: #F40612;
-            --netflix-black: #141414;
-            --netflix-dark: #181818;
-            --netflix-gray: #333333;
-            --netflix-light-gray: #8c8c8c;
-            --netflix-white: #FFFFFF;
+            --primary: #3a86ff;
+            --primary-hover: #2667cc;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+            --dark: #0d1b2a;
+            --darker: #070f1a;
+            --light: #e2eafc;
+            --gray: #415a77;
+            --light-gray: #e0e1dd;
+            --success: #4cc9f0;
+            --error: #f72585;
+            --info: #4895ef;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
             min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-                        url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23141414"/><path d="M0 20 L100 20" stroke="%23222" stroke-width="0.5"/><path d="M0 40 L100 40" stroke="%23222" stroke-width="0.5"/><path d="M0 60 L100 60" stroke="%23222" stroke-width="0.5"/><path d="M0 80 L100 80" stroke="%23222" stroke-width="0.5"/><path d="M20 0 L20 100" stroke="%23222" stroke-width="0.5"/><path d="M40 0 L40 100" stroke="%23222" stroke-width="0.5"/><path d="M60 0 L60 100" stroke="%23222" stroke-width="0.5"/><path d="M80 0 L80 100" stroke="%23222" stroke-width="0.5"/></svg>');
-            color: var(--netflix-white);
+            background: radial-gradient(circle at top left, var(--darker), var(--dark));
+            color: var(--light);
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            overflow-x: hidden;
         }
         
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="%23070f1a"/><path d="M0 20 L100 20" stroke="%230d1b2a" stroke-width="0.5"/><path d="M0 40 L100 40" stroke="%230d1b2a" stroke-width="0.5"/><path d="M0 60 L100 60" stroke="%230d1b2a" stroke-width="0.5"/><path d="M0 80 L100 80" stroke="%230d1b2a" stroke-width="0.5"/><path d="M20 0 L20 100" stroke="%230d1b2a" stroke-width="0.5"/><path d="M40 0 L40 100" stroke="%230d1b2a" stroke-width="0.5"/><path d="M60 0 L60 100" stroke="%230d1b2a" stroke-width="0.5"/><path d="M80 0 L80 100" stroke="%230d1b2a" stroke-width="0.5"/></svg>');
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        /* HEADER - Consistent with main design */
         .header {
             width: 100%;
             padding: 20px 40px;
             display: flex;
             align-items: center;
+            background: linear-gradient(135deg, rgba(10, 20, 35, 0.98) 0%, rgba(15, 30, 50, 0.96) 100%);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: var(--netflix-red);
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 0.5px;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            text-decoration: none;
+            gap: 12px;
         }
         
         .logo i {
-            margin-right: 10px;
+            font-size: 2.2rem;
         }
         
+        /* REGISTER CONTAINER - Glassmorphism Design */
         .register-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             margin: auto;
-            padding: 60px 68px;
-            background-color: rgba(0, 0, 0, 0.75);
-            border-radius: 4px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-            animation: fadeIn 0.5s ease;
+            padding: 60px;
+            background: rgba(13, 27, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(58, 134, 255, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: rotate 20s linear infinite;
         }
         
         .form-title {
-            color: var(--netflix-white);
-            font-size: 32px;
+            color: var(--light);
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
         }
         
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        /* MESSAGES - Floating Notifications */
         .message {
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 4px;
+            margin-bottom: 25px;
+            padding: 18px 25px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
-            animation: fadeIn 0.3s ease;
+            animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(13, 27, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-origin: top center;
         }
         
         .message i {
-            margin-right: 10px;
-            font-size: 20px;
+            margin-right: 15px;
+            font-size: 1.5rem;
         }
         
         .success {
-            background-color: rgba(39, 174, 96, 0.2);
-            border-left: 4px solid #27AE60;
+            border-left: 5px solid var(--success);
         }
         
         .error {
-            background-color: rgba(229, 9, 20, 0.2);
-            border-left: 4px solid var(--netflix-red);
+            border-left: 5px solid var(--error);
         }
         
         .info {
-            background-color: rgba(41, 128, 185, 0.2);
-            border-left: 4px solid #2980B9;
+            border-left: 5px solid var(--info);
         }
         
+        /* FORM ELEMENTS */
         .form-group {
             position: relative;
-            margin-bottom: 16px;
+            margin-bottom: 25px;
         }
         
         .form-control {
             width: 100%;
-            height: 50px;
-            background-color: var(--netflix-gray);
-            border: none;
-            border-radius: 4px;
-            color: var(--netflix-white);
-            padding: 16px 20px;
-            font-size: 16px;
+            height: 60px;
+            background: rgba(20, 40, 60, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--light);
+            padding: 20px 25px 10px;
+            font-size: 1rem;
             outline: none;
+            transition: all 0.3s ease;
         }
         
         .form-control:focus {
-            background-color: #454545;
-            box-shadow: 0 0 0 2px var(--netflix-red);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.2);
+            background: rgba(20, 40, 60, 0.7);
         }
         
         .form-label {
             position: absolute;
-            left: 20px;
-            top: 16px;
-            color: var(--netflix-light-gray);
+            left: 25px;
+            top: 20px;
+            color: rgba(226, 234, 252, 0.7);
             pointer-events: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .form-control:focus ~ .form-label,
         .form-control:not(:placeholder-shown) ~ .form-label {
-            top: -10px;
-            left: 10px;
-            font-size: 12px;
+            top: 8px;
+            left: 20px;
+            font-size: 0.8rem;
             padding: 0 5px;
-            background-color: var(--netflix-gray);
-            border-radius: 2px;
-            color: var(--netflix-white);
-        }
-        
-        .form-control:focus ~ .form-label {
-            color: var(--netflix-red);
+            background: linear-gradient(to bottom, var(--darker), var(--dark));
+            color: var(--primary);
         }
         
         .submit-btn {
             width: 100%;
-            height: 50px;
-            background-color: var(--netflix-red);
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border: none;
-            border-radius: 4px;
-            color: var(--netflix-white);
-            font-size: 16px;
-            font-weight: 700;
-            margin-top: 24px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 30px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             gap: 10px;
+            box-shadow: 0 10px 30px rgba(58, 134, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .submit-btn:hover {
-            background-color: var(--netflix-red-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(58, 134, 255, 0.6);
         }
         
         .submit-btn:active {
@@ -177,62 +240,88 @@
         }
         
         .form-footer {
-            margin-top: 16px;
-            color: var(--netflix-light-gray);
+            margin-top: 25px;
+            color: rgba(226, 234, 252, 0.7);
             display: flex;
             justify-content: center;
-            font-size: 14px;
+            font-size: 0.95rem;
+            text-align: center;
         }
         
         .form-footer a {
-            color: var(--netflix-white);
+            color: var(--primary);
             text-decoration: none;
             margin-left: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
         .form-footer a:hover {
             text-decoration: underline;
-            color: var(--netflix-red);
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            color: var(--accent);
         }
         
         .form-note {
-            font-size: 13px;
-            color: var(--netflix-light-gray);
-            margin-top: 10px;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            color: rgba(226, 234, 252, 0.6);
+            margin-top: 20px;
+            line-height: 1.6;
+            text-align: center;
         }
         
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px) scale(0.9); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .register-container {
                 padding: 40px 30px;
                 margin: 20px;
+                width: calc(100% - 40px);
             }
             
             .form-title {
-                font-size: 28px;
+                font-size: 2rem;
             }
-        }
-        
-        @media (max-width: 480px) {
+            
             .header {
                 padding: 15px 20px;
             }
             
             .logo {
-                font-size: 24px;
+                font-size: 2rem;
             }
-            
+        }
+        
+        @media (max-width: 480px) {
             .register-container {
                 padding: 30px 20px;
             }
             
             .form-title {
-                font-size: 24px;
+                font-size: 1.8rem;
+            }
+            
+            .form-footer {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .form-footer a {
+                margin-left: 0;
             }
         }
     </style>
@@ -240,13 +329,13 @@
 <body>
     <div class="header">
         <a href="{{ url_for('login') }}" class="logo">
-            <i class="fas fa-play-circle"></i>
-            <span>VideoFlix</span>
+            <i class="fas fa-play"></i>
+            <span>Neto Flix</span>
         </a>
     </div>
     
     <div class="register-container">
-        <h1 class="form-title">Crear cuenta</h1>
+        <h1 class="form-title">Crear Cuenta</h1>
         
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -268,12 +357,12 @@
         <form method="post" action="{{ url_for('register') }}">
             <div class="form-group">
                 <input type="text" id="username" name="username" class="form-control" required placeholder=" ">
-                <label for="username" class="form-label">Nombre de usuario</label>
+                <label for="username" class="form-label">Nombre de Usuario</label>
             </div>
             
             <div class="form-group">
                 <input type="email" id="email" name="email" class="form-control" required placeholder=" ">
-                <label for="email" class="form-label">Correo electrónico</label>
+                <label for="email" class="form-label">Correo Electrónico</label>
             </div>
             
             <div class="form-group">
@@ -282,11 +371,11 @@
             </div>
             
             <div class="form-note">
-                Al crear una cuenta, aceptas nuestros Términos de servicio y nuestra política de privacidad.
+                Al crear una cuenta, aceptas nuestros Términos de servicio y nuestra Política de Privacidad.
             </div>
             
             <button type="submit" class="submit-btn">
-                <i class="fas fa-user-plus"></i> Crear cuenta
+                <i class="fas fa-user-plus"></i> Registrarse
             </button>
         </form>
         
@@ -296,20 +385,7 @@
         </div>
     </div>
     
-    <script>
-        // Animación para los mensajes de alerta
-        document.addEventListener('DOMContentLoaded', function() {
-            const messages = document.querySelectorAll('.message');
-            
-            messages.forEach(message => {
-                setTimeout(() => {
-                    message.style.opacity = '0';
-                    setTimeout(() => {
-                        message.style.display = 'none';
-                    }, 300);
-                }, 5000);
-            });
-        });
-    </script>
+    <!-- Inclusión del archivo JavaScript -->
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </body>
 </html>
