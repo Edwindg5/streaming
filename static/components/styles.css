@@ -89,6 +89,47 @@
     left: 70%;
 }
 
+
+/* Header reorganizado */
+#main-header .container {
+    justify-content: space-between; /* Distribuye el espacio entre elementos */
+}
+
+#main-header .flex.items-center.gap-6 {
+    margin-left: 0; /* Elimina el margen izquierdo automático */
+    order: 1; /* Orden normal (derecha) */
+}
+
+/* Ajustes para los elementos del header */
+#main-header .logo-section {
+    display: flex;
+    align-items: center;
+}
+
+#main-header nav {
+    margin: 0 auto; /* Centra el menú de navegación */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    #main-header .container {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem 0;
+    }
+    
+    #main-header nav {
+        order: 2;
+        margin: 1rem 0;
+    }
+    
+    #main-header .flex.items-center.gap-6 {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* Mejoras de navegación */
 .nav-links {
     display: flex;
